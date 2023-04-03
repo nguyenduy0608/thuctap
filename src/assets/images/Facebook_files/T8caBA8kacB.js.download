@@ -1,0 +1,5 @@
+;/*FB_PKG_DELIM*/
+
+__d("CommunityHelpClickFalcoEvent",["FalcoLoggerInternal","getFalcoLogPolicy_DO_NOT_USE"],(function(a,b,c,d,e,f,g){"use strict";a=c("getFalcoLogPolicy_DO_NOT_USE")("1909379");b=d("FalcoLoggerInternal").create("community_help_click",a);e=b;g["default"]=e}),98);
+__d("XCometJobsComposerControllerRouteBuilder",["jsRouteBuilder"],(function(a,b,c,d,e,f,g){a=c("jsRouteBuilder")("/jobs_composer/",Object.freeze({composer_mode:"new_post",source:"web_url"}),void 0);b=a;g["default"]=b}),98);
+__d("XCometOfferCreateControllerRouteBuilder",["jsRouteBuilder"],(function(a,b,c,d,e,f,g){a=c("jsRouteBuilder")("/offers/create/",Object.freeze({referrer:"unknown"}),void 0);b=a;g["default"]=b}),98);

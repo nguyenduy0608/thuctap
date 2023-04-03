@@ -1,0 +1,3 @@
+;/*FB_PKG_DELIM*/
+
+__d("LSIssueDismissCommunityListNewBadge",["LSIssueNewTaskWithExtraOperations"],(function(a,b,c,d,e,f){function a(){var a=arguments,c=a[a.length-1];c.n;var d=[],e=[],f;return c.seq([function(e){return d[0]=new c.Map(),d[0].set("community_id",a[0]),d[1]=c.toJSON(d[0]),c.sp(b("LSIssueNewTaskWithExtraOperations"),"cm_mark_community_new_badge_as_clicked",[0,606],d[1],f,f,[0,0],[0,0],f,f,[0,0],f)},function(a){return c.resolve(e)}])}c=a;f["default"]=c}),66);
