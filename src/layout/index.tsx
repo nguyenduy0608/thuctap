@@ -42,9 +42,6 @@ const PageLayout = (PageComponent: React.JSXElementConstructor<any>) => {
                 <PageComponent {...props} />
               </div>
               {/* footer content */}
-              <Footer>
-                <div>Nguyễn Đức Duy - 2023</div>
-              </Footer>
             </Content>
           </ErrorBoundary>
         </Layout>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   ContainerStyled,
   LoginLeftStyled,
@@ -6,8 +6,17 @@ import {
   LoginRightStyled,
   WrapperStyled,
 } from "../style";
-import { Button, Checkbox, Form, Input, notification } from "antd";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import Cookie from "js-cookie";
+import { io } from "socket.io-client";
+import { Button, Checkbox, Form, Input, message, notification } from "antd";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { SESSION_ID, getUserInfoAction, setToken } from "./AuthSlice";
+import LocalStorage from "../../../apis/LocalStorage";
+import { Notification, wait } from "../../../utils";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 interface ILogin {
   email: string;
   password: string;
@@ -15,18 +24,54 @@ interface ILogin {
 }
 const LoginPage = () => {
   const navigate = useNavigate();
-  const onFinish = (values: any) => {
-    if (values.email === "admin@gmail.com" && values.password === "123456") {
-      return navigate("/");
-    }
-    notification["error"]({
-      message: "MERN STACK",
-      description: "Tài khoản hoặc mật khẩu không chính xác!",
-    });
-  };
+  const [isLoading, setLoading] = useState(false);
+  const [form] = Form.useForm();
+  const dispatch: any = useDispatch();
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+  const onFinish = async (values: any) => {
+    try {
+      setLoading(true);
+      const resLogin = await axios.post(
+        "https://dev.httapi.winds.vn/api/v1/admin/session",
+        {
+          password: values.password,
+          phone_number: values.phone_number,
+        }
+      );
+      const token = resLogin.data.token;
+      localStorage.setItem("token", token);
+      Cookie.set(SESSION_ID, resLogin.data.token, {
+        expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      });
+
+      const res = await axios.get(
+        "https://dev.httapi.winds.vn/api/v1/admin/session/me",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = res?.data;
+      console.log(data);
+      if (resLogin.data.shop_id == null) {
+        console.log(resLogin.data.shop_id);
+        navigate("/");
+      }
+      //  else {
+      //   history.replace("/dash-board");
+      // }
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+  const onLogin = () => {
+    try {
+      const socket = io("http://127.0.0.1:5173/");
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <ContainerStyled>
@@ -39,21 +84,18 @@ const LoginPage = () => {
             <Form
               name="basic"
               initialValues={{ remember: true }}
-              onFinish={onFinish}
-              onFinishFailed={onFinishFailed}
+              onFinish={(values: any) => {
+                onFinish(values);
+              }}
               autoComplete="off"
               layout="vertical"
             >
               <Form.Item
                 style={{ marginBottom: "10px" }}
-                label="Email"
-                name="email"
+                label="Số điện thoại"
+                name="phone_number"
                 rules={[
                   { required: true, message: "Please input your email!" },
-                  {
-                    type: "email",
-                    message: "Vui lòng nhập đúng định dạng email",
-                  },
                 ]}
               >
                 <Input size="large" placeholder="Nhập địa chỉ email" />

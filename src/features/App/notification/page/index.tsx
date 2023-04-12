@@ -15,16 +15,13 @@ import {
 import React, { useState } from "react";
 import SelectComponent from "../../../../components/SelectComponent";
 import TopBar from "../../../../components/TopBar";
-import {
-  AccountColumns,
-  Accountdata,
-} from "../../account/components/Account.Config";
+
 import {
   NotificationColumns,
   Notificationdata,
 } from "../components/Notification.Config";
-import OrderFormPage from "./form";
-import CustomerFormPage from "./form";
+import NotificationFormPage from "./form";
+
 const { RangePicker } = DatePicker;
 const NotificationPage = () => {
   const { Search } = Input;
@@ -107,7 +104,7 @@ const NotificationPage = () => {
         dataSource={Notificationdata}
         bordered={true}
       />
-      <OrderFormPage
+      <NotificationFormPage
         ShowModal={showModal}
         handleCancel={handleCancel}
         handleOk={handleOk}

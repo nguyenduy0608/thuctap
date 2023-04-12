@@ -22,7 +22,7 @@ const SideBar = ({
   return (
     <Layout.Sider
       style={{
-        minHeight: "830px",
+        minHeight: "740px",
       }}
       trigger={null}
       collapsed={width < TAB_SIZE ? false : collapsed}

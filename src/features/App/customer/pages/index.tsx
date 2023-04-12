@@ -50,29 +50,20 @@ const CustomerPage = () => {
     selectedRowKeys,
     onChange: onSelectChange,
   };
-  // useEffect(() => {
-  //   fetchData();
-  // });
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await fetch("http://localhost:8080/okokok", {});
-  //     const jsonData = await response.json();
+  useEffect(() => {
+    fetchData();
+  }, []);
+  const fetchData = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/okokok", {});
+      const jsonData = await response.json();
 
-  //     setDataCustomer(jsonData);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-  var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-      var data = JSON.parse(this.responseText);
-      setDataCustomer(data);
-      // sử dụng dữ liệu lấy được ở đây
+      setDataCustomer(jsonData);
+    } catch (err) {
+      console.log(err);
     }
   };
-  xmlhttp.open("GET", "http://localhost:8080/okokok", true);
-  xmlhttp.send();
+
   return (
     <>
       <TopBar title="Khách hàng" />

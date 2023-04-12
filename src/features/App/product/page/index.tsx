@@ -1,24 +1,51 @@
-import { Button, Card, Input, Modal, Space, Switch, Table } from "antd";
-import React, { useState } from "react";
+import { Button, Card, Input, Modal, Space, Switch, Table, Tag } from "antd";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TopBar from "../../../../components/TopBar";
-import { ProductColumns, ProductData } from "../components/Product.Config";
+import {
+  DataProductType,
+  IProductPayload,
+  ProductColumns,
+  ProductData,
+} from "../components/Product.Config";
 import ProductFormPage from "./form";
+import { TitleAccount } from "../../../../config/global.style";
+import axios from "axios";
+import useDebounce from "../../../../hooks/useDebounce";
 const ProductPage = () => {
+  const [params, setParams] = useState<IProductPayload>({
+    page: "",
+    search: "",
+    limit: 12,
+  });
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [values, setValues] = useState<DataProductType | null>();
+  const [callBack, setCallBack] = useState(false);
   const { Search } = Input;
   const onSearch = (value: string) => console.log(value);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const Navige = useNavigate();
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
+  const debounced = useDebounce([params, callBack], 300);
+  useEffect(() => {
+    getDataProduct();
+  }, debounced);
+  const getDataProduct = async () => {
+    try {
+      const res = await axios.get(
+        "https://dev.httapi.winds.vn/api/v1/admin/product",
+        {
+          params,
+        }
+      );
+      setValues(res?.data?.data);
+      console.log("values:", values);
+      setPage(res?.data?.paging?.page);
+      setTotal(res?.data?.paging?.totalItemCount);
+    } catch (err) {
+      console.log(err);
+    }
   };
   return (
     <>
@@ -34,47 +61,28 @@ const ProductPage = () => {
             />
           </Space>
         }
-        extra={
-          <Space>
-            <Button
-              onClick={() => {
-                setIsModalOpen(true);
-              }}
-              size="large"
-              type="primary"
-              style={{ fontSize: "1.8rem", borderRadius: "10px" }}
-            >
-              Thêm mới
-            </Button>
-          </Space>
-        }
+        extra={<Space></Space>}
       >
-        Kết quả lọc:{ProductData.length}
+        Kết quả lọc:{total}
       </Card>
       <Table
+        bordered={true}
         columns={[
           ...ProductColumns,
-          // {
-          //   title: "Trạng thái hoạt động",
-          //   dataIndex: "status",
-          //   align: "center",
-          //   render: (value: any) => (
-          //     <div>
-          //       <Switch
-          //         onChange={() => {
-          //           !value;
-          //         }}
-          //         checked={value}
-          //       ></Switch>
-          //     </div>
-          //   ),
-          // },
           {
-            title: "Thao tác",
+            title: <TitleAccount>Trạng thái hoạt động</TitleAccount>,
+            width: "20%",
+            dataIndex: "status",
             align: "center",
-            dataIndex: "",
-            key: "x",
-            render: () => <a>Delete</a>,
+            render: (value: any) => (
+              <div>
+                {value === 1 ? (
+                  <Tag color="#87d068">Đang hoạt động</Tag>
+                ) : (
+                  <Tag color="red"> Ngừng hoạt động</Tag>
+                )}
+              </div>
+            ),
           },
         ]}
         onRow={(record) => {
@@ -84,12 +92,12 @@ const ProductPage = () => {
         }}
         dataSource={ProductData}
       />
-      <ProductFormPage
+      {/* <ProductFormPage
         ShowModal={showModal}
         handleCancel={handleCancel}
         handleOk={handleOk}
         open={isModalOpen}
-      />
+      /> */}
     </>
   );
 };

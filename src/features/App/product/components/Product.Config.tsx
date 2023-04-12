@@ -1,7 +1,7 @@
 import React from "react";
 import type { ColumnsType } from "antd/es/table";
 
-interface DataType {
+export interface DataProductType {
   key: React.Key;
   name: string;
   id_product: number;
@@ -9,7 +9,14 @@ interface DataType {
   amount?: number;
   status?: boolean;
 }
-export const ProductColumns: ColumnsType<DataType> = [
+export interface IProductPayload {
+  search?: string;
+  page?: string;
+  limit?: string | number;
+  category_id?: boolean;
+  status?: string;
+}
+export const ProductColumns: ColumnsType<DataProductType> = [
   {
     title: "STT",
     dataIndex: "id",
@@ -21,7 +28,7 @@ export const ProductColumns: ColumnsType<DataType> = [
   { title: "Giá bán", dataIndex: "price", key: "price", align: "center" },
   { title: "Số lượng", dataIndex: "amount", key: "amount", align: "center" },
 ];
-export const ProductData: DataType[] = [
+export const ProductData: DataProductType[] = [
   {
     key: 1,
     name: "Hoa hồng đỏ",
